@@ -37,12 +37,18 @@ defmodule MixDemoWeb.PostLive.Index do
 
   @impl true
   def handle_info({MixDemoWeb.PostLive.FormComponent, {:saved, post}}, socket) do
-    {:noreply, stream_insert(socket, :posts, post)}
+    #{:noreply, stream_insert(socket, :posts, post)}
+    {:noreply, socket}
   end
 
   @impl true
   def handle_info({:new_post, post}, socket) do
-    {:noreply, update(socket, :posts, fn posts -> [post | posts] end)}
+    {:noreply, stream_insert(socket, :posts, post)}
+  end
+
+  @impl true
+  def handle_info({:delete_post, post}, socket) do
+    {:noreply, stream_delete(socket, :posts, post)}
   end
 
   @impl true

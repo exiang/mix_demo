@@ -72,6 +72,7 @@ defmodule MixDemo.Timeline do
     post
     |> Post.changeset(attrs)
     |> Repo.update()
+    |> broadcast(:update_post)
   end
 
   @doc """
@@ -88,6 +89,7 @@ defmodule MixDemo.Timeline do
   """
   def delete_post(%Post{} = post) do
     Repo.delete(post)
+    |> broadcast(:delete_post)
   end
 
   @doc """
