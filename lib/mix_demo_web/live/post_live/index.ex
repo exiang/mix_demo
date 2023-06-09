@@ -6,8 +6,11 @@ defmodule MixDemoWeb.PostLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    if connected?(socket), do: Timeline.subscribe()
+
     {:ok, stream(socket, :posts, Timeline.list_posts())}
   end
+
 
   @impl true
   def handle_params(params, _url, socket) do
@@ -35,6 +38,11 @@ defmodule MixDemoWeb.PostLive.Index do
   @impl true
   def handle_info({MixDemoWeb.PostLive.FormComponent, {:saved, post}}, socket) do
     {:noreply, stream_insert(socket, :posts, post)}
+  end
+
+  @impl true
+  def handle_info({:new_post, post}, socket) do
+    {:noreply, update(socket, :posts, fn posts -> [post | posts] end)}
   end
 
   @impl true
